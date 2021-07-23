@@ -1,0 +1,4 @@
+altair
+altair-viewer
+pandas
+numpy
