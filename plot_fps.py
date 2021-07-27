@@ -58,8 +58,8 @@ def plot_fps(filename, resolution='5Min'):
     df.fillna(0)
     print(df)
 
-    alt.Chart(df).mark_bar().encode(
-    #alt.Chart(df).mark_area(line=True, opacity=0.3).encode(
+    #alt.Chart(df).mark_bar().encode(
+    alt.Chart(df).mark_area(line=True, opacity=0.3).encode(
         alt.X("datetime"),
         alt.Y("fps:Q"),
         alt.Row("serial:N"),
