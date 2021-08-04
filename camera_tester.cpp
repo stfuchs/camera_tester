@@ -82,10 +82,29 @@ public:
     }
   }
 
+  void reset()
+  {
+    rs2::context ctx;
+    for (auto&& dev : ctx.query_devices())
+    {
+      if (std::string(dev.get_info(RS2_CAMERA_INFO_SERIAL_NUMBER)) != serial_)
+      {
+        continue;
+      }
+
+      LOG(serial_, "Performing hardware reset.");
+      dev.hardware_reset();
+      LOG(serial_, "Reset triggered! Waiting for 5 seconds...");
+      std::this_thread::sleep_for(std::chrono::seconds(5));
+      LOG(serial_, "Reset complete!");
+    }
+  }
+
   void run()
   {
     try
     {
+      reset();
       run_unsafe();
     }
     catch (const rs2::error& e)
