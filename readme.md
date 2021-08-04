@@ -25,6 +25,12 @@ To generate logs:
 ./build/camera_tester > camera_fps.log
 ```
 
+To restart the tester perioducally you can also use
+```
+./periodic_tester.py --binary build/camera_tester --run 10 --sleep 5
+```
+
+
 To plot run in terminal with activated venv:
 ```
 ./plot_fps.py camera_fps.log
