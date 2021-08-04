@@ -15,7 +15,7 @@ DURATION_SLEEP = 1*60*60
 
 def run_cycle(run_duration, sleep_duration, prefix, binary):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = f"{prefix}camera_tester_{timestamp}.log"
+    filename = f"{prefix}{timestamp}.log"
 
     with open(filename, 'w') as logfile:
         print(f"Writing to {filename}")
