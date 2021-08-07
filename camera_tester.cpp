@@ -164,8 +164,12 @@ public:
       const Duration time_since_last_log{now - tp_last_logged};
       if (time_since_last_log.count() > 60) // Throttle log output
       {
-        LOG(serial_, "FPS: " << frame_counter / time_since_last_log.count() << " ("
-            << frame_counter << " / " << time_since_last_log.count() << ")");
+        float fps = frame_counter / time_since_last_log.count();
+        LOG(serial_, "FPS: " << fps << " (" << frame_counter << " / " << time_since_last_log.count() << ")");
+        if (fps < 3)
+        {
+          throw std::runtime_error("FPS drop too much.");
+        }
         frame_counter = 0;
         tp_last_logged = now;
       }
@@ -219,6 +223,6 @@ int main(int argc, char** argv)
       }
     }
 
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
   }
 }
