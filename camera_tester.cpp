@@ -162,14 +162,14 @@ public:
       const auto now = Clock::now();
 
       const Duration time_since_last_log{now - tp_last_logged};
-      if (time_since_last_log.count() > 60) // Throttle log output
+      if (time_since_last_log.count() > 1) // Throttle log output
       {
         float fps = frame_counter / time_since_last_log.count();
         LOG(serial_, "FPS: " << fps << " (" << frame_counter << " / " << time_since_last_log.count() << ")");
-        if (fps < 3)
-        {
-          throw std::runtime_error("FPS drop too much.");
-        }
+        //if (fps < 3)
+        //{
+        //  throw std::runtime_error("FPS drop too much.");
+        //}
         frame_counter = 0;
         tp_last_logged = now;
       }
@@ -213,14 +213,49 @@ int main(int argc, char** argv)
     drivers.push_back(std::make_shared<MiniDriver>(dev.get_info(RS2_CAMERA_INFO_SERIAL_NUMBER)));
   }
 
+  using Clock = std::chrono::high_resolution_clock;
+  using TimePoint = std::chrono::time_point<Clock>;
+  using Duration = std::chrono::duration<double>;
+
+  bool toggle = true;
+  auto started = Clock::now();
+
+  for (int i=0; i<4; ++i)
+  {
+    drivers[i]->start();
+  }
+
   while (true)
   {
-    for (auto driver : drivers)
+    const auto now = Clock::now();
+    const Duration run_time{now - started};
+    if (run_time.count() > 3600)
     {
-      if (!driver->is_running())
+      if (toggle)
       {
-        driver->start();
+        for (int i=0; i<4; ++i)
+        {
+          drivers[i]->stop();
+        }
+        for (int i=4; i<8; ++i)
+        {
+          drivers[i]->start();
+        }
       }
+      else
+      {
+        for (int i=4; i<8; ++i)
+        {
+          drivers[i]->stop();
+        }
+        for (int i=0; i<4; ++i)
+        {
+          drivers[i]->start();
+        }
+      }
+
+      toggle != toggle;
+      started = now;
     }
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
