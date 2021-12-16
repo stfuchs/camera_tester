@@ -27,3 +27,6 @@ venv/
 
 # Pycharm
 .idea/
+
+*.log
+*.png

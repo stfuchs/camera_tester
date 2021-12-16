@@ -9,7 +9,7 @@ import datetime
 import subprocess
 import time
 
-DURATION_RUN = 8*60*60
+DURATION_RUN = 23*60*60
 DURATION_SLEEP = 1*60*60
 
 

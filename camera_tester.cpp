@@ -79,6 +79,7 @@ public:
       interrupt_requested_ = true;
       thread_.join();
       interrupt_requested_ = false;
+      LOG(serial_, "Stopped");
     }
   }
 
@@ -104,7 +105,7 @@ public:
   {
     try
     {
-      reset();
+      //reset();
       run_unsafe();
     }
     catch (const rs2::error& e)
@@ -162,7 +163,7 @@ public:
       const auto now = Clock::now();
 
       const Duration time_since_last_log{now - tp_last_logged};
-      if (time_since_last_log.count() > 1) // Throttle log output
+      if (time_since_last_log.count() > 30) // Throttle log output
       {
         float fps = frame_counter / time_since_last_log.count();
         LOG(serial_, "FPS: " << fps << " (" << frame_counter << " / " << time_since_last_log.count() << ")");
@@ -229,7 +230,7 @@ int main(int argc, char** argv)
   {
     const auto now = Clock::now();
     const Duration run_time{now - started};
-    if (run_time.count() > 3600)
+    if (run_time.count() > 120)
     {
       if (toggle)
       {
@@ -254,7 +255,7 @@ int main(int argc, char** argv)
         }
       }
 
-      toggle != toggle;
+      toggle = !toggle;
       started = now;
     }
 
